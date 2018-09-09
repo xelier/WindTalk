@@ -122,7 +122,7 @@ def update_table(table,conditionDict,updateDict):
         else:
             sql += "%s = '%s' and " % (key, val.replace("'", "\\'").replace("\\", "\\\\"))
     sql = sql[:-5]
-    result = execute(sql,ExecuteNoQuery=True)
+    result = execute(sql, ExecuteNoQuery=True)
     if result is None:
         ret = False
     return ret
