@@ -14,4 +14,4 @@ def exception(func):
             log.info(traceback.print_exc())
         finally:
             pass
-    return wrapper()
+    return wrapper
