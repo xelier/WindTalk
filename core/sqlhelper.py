@@ -292,9 +292,9 @@ if __name__ == "__main__":
     # s = delete_record_by_param('user', {'username': 'bob'})
     # s = get_page_list('user', {}, 0, 100)
     # s = get_page_num('user', {'username': 'bob'}, 100)
-    s = get_all_record_num('user', {'username': 'xelier'})
+    # s = get_all_record_num('user', {'username': 'xelier'})
     # execute("insert into user values(null ,'bob','bob',1,'bob','xx')")
     # delete_record_by_param("user", {'userName': 'bob'})
-    print(s)
-
+    # print(s)
+    pass
 
