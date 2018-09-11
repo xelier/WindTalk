@@ -5,10 +5,7 @@ logging封装
 import logging
 import tornado.options
 
-logging.basicConfig(level=logging.INFO,
-                                format='[%(levelname)s %(asctime)s]:%(message)s',
-                                datefmt  = '%m-%d %H:%M:%S'
-                                )
+logging.basicConfig(level=logging.INFO, format='[%(levelname)s %(asctime)s]:%(message)s', datefmt='%m-%d %H:%M:%S')
 
 def debug(msg, *args, **kwargs):
     """
