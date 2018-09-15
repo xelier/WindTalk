@@ -133,3 +133,4 @@ def save_image(image, name, sign_id):
 if __name__ == "__main__":
     # print current_datetime()
     print(str_md5('123456'))
+

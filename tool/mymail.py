@@ -73,4 +73,3 @@ def sendEmailToUser(subject, message, mailTo, ccTo=None):
 
 if __name__ == '__main__':
     sendEmailToUser('测试', '哈哈', ','.join(['1047094261@qq.com']), ','.join(['1047094261@qq.com']))
-
