@@ -30,14 +30,15 @@ class Application(tornado.web.Application):
 def main():
     try:
         print("Start cron job background controler.")
+        tornado.options.parse_command_line()
+        httpserver = Application()
+        print("Port: ", options.port)
+        httpserver.listen(options.port, max_buffer_size=_conf.MAX_BUFFER_SIZE)
+        print("Start IOLoop.")
+        tornado.ioloop.IOLoop.instance().start()
     except Exception as e:
         print("Start controler failed: %s" % e)
-    tornado.options.parse_command_line()
-    httpserver = Application()
-    print("Port: ", options.port)
-    httpserver.listen(options.port, max_buffer_size=_conf.MAX_BUFFER_SIZE)
-    print("Start IOLoop.")
-    tornado.ioloop.IOLoop.instance().start()
+
 
 
 if __name__ == "__main__":

@@ -14,7 +14,7 @@ import json
 import base64
 import hashlib
 
-import log
+from tool import log
 import config.config as config
 
 
