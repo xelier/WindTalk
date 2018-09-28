@@ -2,16 +2,15 @@
 """
 connect to mysql database
 """
+import sys
 import tool.log as log
 import pymysql
 import config.config as config
 
-global pool
-pool = None
 
 
 def connDatabase():
-    global pool
+    pool = None
     if pool is None:
         log.info('connect database')
         pool = pymysql.connect(host=config.db_host, user=config.db_user, passwd=config.db_pwd, db=config.db_name,
@@ -212,7 +211,7 @@ def get_all_record_list(table, paramDict ):
             sql += "%s = '%s' and " % (key, pymysql.escape_string(val))
         sql = sql[:-5]
     result = execute(sql, dictCursor=True)
-    return list(result)
+    return result
 
 
 def get_all_record_num(table, paramDict):
@@ -282,7 +281,7 @@ def get_page_num(table, paramDict, pagesize):
 
 
 if __name__ == "__main__":
-    # insert_record('user', {'username': 'bob', 'password': 'bob', 'sex': 0, 'nickname': '中文', 'profile': 'xxx'})
+    insert_record('user', {'username': 'bob', 'password': 'bob', 'sex': 0, 'nickname': '中文', 'profile': 'xxx'})
     # update_table('user', {'username': 'bob'}, {'nickname': '继续'})
     # s = get_record_by_param('user', {'username': 'bob'})
 
@@ -295,5 +294,5 @@ if __name__ == "__main__":
     # execute("insert into user values(null ,'bob','bob',1,'bob','xx')")
     # delete_record_by_param("user", {'userName': 'bob'})
     # print(s)
-    pass
+    # pass
 

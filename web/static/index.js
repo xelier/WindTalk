@@ -47,19 +47,28 @@ class UserGist extends React.Component {
       this.state = {username: '', lastGistUrl: ''};
   }
 
+  cancleToken() {
+    let CancelToken = axios.CancelToken;
+    return CancelToken.source();
+  }
+  getHost(){
+      return window.location.host;
+  }
 
   componentDidMount() {
-    this.serverRequest = $.get(this.props.source, function (result) {
-      var lastGist = result[0];
+    axios.post(this.props.source,{cancelToken: this.cancleToken().token}).then( function (result) {
+      let lastGist = result.data.data[0];
+      debugger;
       this.setState({
-        username: lastGist.owner.login,
-        lastGistUrl: lastGist.html_url
+        username: lastGist.username,
+        lastGistUrl: lastGist.profile
       });
     }.bind(this));
   }
 
   componentWillUnmount() {
-    this.serverRequest.abort();
+      this.cancleToken().cancel();
+    // this.serverRequest.abort();
   }
 
   render() {
@@ -71,8 +80,7 @@ class UserGist extends React.Component {
     );
   }
 }
-
 ReactDOM.render(
-  <UserGist source="https://api.github.com/users/octocat/gists" />,
+  <UserGist source="http://localhost:8888/" />,
   document.getElementById('userInfo')
 );
