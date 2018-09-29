@@ -58,7 +58,6 @@ class UserGist extends React.Component {
   componentDidMount() {
     axios.post(this.props.source,{cancelToken: this.cancleToken().token}).then( function (result) {
       let lastGist = result.data.data[0];
-      debugger;
       this.setState({
         username: lastGist.username,
         lastGistUrl: lastGist.profile

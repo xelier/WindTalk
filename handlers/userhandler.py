@@ -2,13 +2,13 @@
 import json
 
 import tornado.web
-import json
 import tool.decorator as decorator
 from core import sqlhelper
 
 
 class IndexHandler(tornado.web.RequestHandler):
-
+    # something should be shown while step into the home page
+    # but now I didn't decide what things to show there
     @decorator.exception
     def get(self):
         self.render('index.html')
@@ -24,4 +24,9 @@ class IndexHandler(tornado.web.RequestHandler):
             res.append(userInfo)
         self.ret['data'] = res
 
+class LoginHandler(tornado.web.RequestHandler):
+    @decorator.post_exception
+    @tornado.web.authenticated
+    def post(self):
+        jsonData = json.loads(self.request.body)
 
