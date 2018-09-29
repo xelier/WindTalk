@@ -3,7 +3,7 @@ import json
 
 import tornado.web
 import tool.decorator as decorator
-from core import sqlhelper
+from core import sqlhelper, userhelper
 
 
 class IndexHandler(tornado.web.RequestHandler):
@@ -24,9 +24,19 @@ class IndexHandler(tornado.web.RequestHandler):
             res.append(userInfo)
         self.ret['data'] = res
 
+
 class LoginHandler(tornado.web.RequestHandler):
     @decorator.post_exception
     @tornado.web.authenticated
     def post(self):
         jsonData = json.loads(self.request.body)
+        username = jsonData['username']
+        password = jsonData['password']
+        role = jsonData['role']
+        ret = userhelper.login(username, password, role)
+        if ret is None:
+            self.ret['succ'] = False
+            self.ret['err'] = 'User not exits or Password is wrong'
+        else:
+            self.ret['data']['username'] = ret
 
