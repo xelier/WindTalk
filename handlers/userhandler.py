@@ -39,3 +39,7 @@ class LoginHandler(tornado.web.RequestHandler):
             self.ret['err'] = 'User not exits or Password is wrong'
         else:
             self.ret['data']['username'] = ret
+
+
+class exit(tornado.web.RequestHandler):
+    pass
