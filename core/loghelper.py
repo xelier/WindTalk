@@ -20,3 +20,4 @@ def add_log_record(ip, req_item, user=None):
         record['user_id'] = user
     result = sqlhelper.insert_record('op_log', record)
     return result
+
