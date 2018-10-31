@@ -6,6 +6,7 @@ import sys
 import tool.log as log
 import pymysql
 import config.config as config
+from DBUtils.PooledDB import PooledDB
 
 
 
