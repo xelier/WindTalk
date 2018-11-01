@@ -8,17 +8,33 @@ import pymysql
 import config.config as config
 from DBUtils.PooledDB import PooledDB
 
+global pool
+pool = None
 
 
 def connDatabase():
-    pool = None
+    global pool
     if pool is None:
-        log.info('connect database')
-        pool = pymysql.connect(host=config.db_host, user=config.db_user, passwd=config.db_pwd, db=config.db_name,
-                               port=config.db_port, charset='utf8')
+        print('connect database')
+        pool = PooledDB(creator=pymysql,
+                        maxconnections=None,
+                        mincached=2,
+                        maxcached=5,
+                        maxshared=0,
+                        blocking=True,
+                        maxusage=None,
+                        setsession=[],
+                        ping=0,
+                        host=config.db_host,
+                        port=config.db_port,
+                        user=config.db_user,
+                        passwd=config.db_pwd,
+                        db=config.db_name,
+                        charset='utf8'
+                        )
     if not pool:
         log.info("connect failed")
-    return pool
+    return pool.connection()
 
 
 def execute(query, ExecuteNoQuery=False, dictCursor=False):
