@@ -25,3 +25,8 @@ def register(username, password, sex, nickname, profile):
                                          'profile': profile})
         return True
 
+
+def modify(username, password, sex, nickname,profile):
+    ret = sqlhelper.get_record_by_param('user', {'username': username})
+    if ret:
+        sqlhelper.update_table()
