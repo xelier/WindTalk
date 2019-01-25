@@ -1,12 +1,13 @@
-#encoding:utf-8
+# encoding:utf-8
 import json
+from abc import ABC
 
 import tornado.web
 import tool.decorator as decorator
 from core import sqlhelper, userhelper
 
 
-class IndexHandler(tornado.web.RequestHandler):
+class IndexHandler(tornado.web.RequestHandler, ABC):
     # something should be shown while step into the home page
     # but now I didn't decide what things to show there
     @decorator.exception
@@ -25,7 +26,7 @@ class IndexHandler(tornado.web.RequestHandler):
         self.ret['data'] = res
 
 
-class LoginHandler(tornado.web.RequestHandler):
+class LoginHandler(tornado.web.RequestHandler, ABC):
     @decorator.post_exception
     @tornado.web.authenticated
     def post(self):
@@ -41,5 +42,5 @@ class LoginHandler(tornado.web.RequestHandler):
             self.ret['data']['username'] = ret
 
 
-class exit(tornado.web.RequestHandler):
+class UserExit(tornado.web.RequestHandler, ABC):
     pass

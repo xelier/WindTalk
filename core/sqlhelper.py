@@ -2,7 +2,6 @@
 """
 connect to mysql database
 """
-import sys
 import tool.log as log
 import pymysql
 import config.config as config
