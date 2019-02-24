@@ -3,20 +3,11 @@
 server中用到的公用方法
 """
 import os
-import re
-import urllib
 import time
 import random
-import socket
 import datetime
-import tool.mymail as mail
-import json
 import base64
 import hashlib
-
-from tool import log
-import config.config as config
-
 
 def retryUntilPass(msg, func, timeout, interval=2, ignoreex=True):
     """
