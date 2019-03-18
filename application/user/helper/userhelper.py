@@ -3,9 +3,7 @@ from core import sqlhelper
 
 
 def login(username, password, role):
-    """
-    this is the fucking login method
-    """
+    """login method"""
     ret = sqlhelper.get_record_by_param('user', {'username': username, 'password': password, 'role': role})
     if ret:
         return ret['username']
@@ -14,7 +12,6 @@ def login(username, password, role):
 
 def register(username, password, sex, nickname, profile):
     """
-    this is the fucking register method
     It is necessary to check the username's existing before insert a record to table user.
     """
     ret = sqlhelper.get_record_by_param('user', {'username': username})
