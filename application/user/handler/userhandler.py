@@ -19,11 +19,11 @@ class IndexHandler(tornado.web.RequestHandler, ABC):
     def post(self):
         user = sqlhelper.get_all_record_list('user', {})
         res = []
-        userInfo = {}
+        userinfo = {}
         for us in user:
-            userInfo['username'] = us['username']
-            userInfo['profile'] = us['profile']
-            res.append(userInfo)
+            userinfo['username'] = us['username']
+            userinfo['profile'] = us['profile']
+            res.append(userinfo)
         self.ret['data'] = res
 
 
