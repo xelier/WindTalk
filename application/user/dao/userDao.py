@@ -26,3 +26,8 @@ def query_user_info(user_id):
     return sqlhelper.get_record_by_param('USER', {'ID': user_id})
 
 
+def query_user_info_by_name(user_name):
+    """query user information"""
+    return sqlhelper.get_record_by_param('USER', {'USERNAME': user_name})
+
+

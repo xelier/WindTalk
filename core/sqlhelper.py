@@ -292,6 +292,12 @@ def get_page_num(table, paramDict, pagesize):
     return int(ret)
 
 
+def generate_id_by_sequence_name(seqName):
+    """generate a id by sequence name"""
+    sql = "select nextval(%s) ID" % seqName
+    result = execute(sql, dictCursor=True)
+    return result[0]['ID']
+
 
 
 
