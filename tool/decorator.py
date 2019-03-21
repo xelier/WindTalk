@@ -42,3 +42,20 @@ def post_exception(func):
             self.write(json.dumps(self.ret, cls=DatetimeEncoder))
             util.ignoreException(lambda: loghelper.add_log_record(ip=self.request.remote_ip, req_item=self.__class__.__name__))
     return wrapper
+
+
+def get_exception(func):
+    @functools.wraps(func)
+    def wrapper(self, *args, **kwargs):
+        self.ret = {'succ': True, 'err': '', 'data': {}}
+        try:
+            func(self, *args, **kwargs)
+        except tornado.web.MissingArgumentError as e:
+            log.info(traceback.format_exc())
+            self.ret['succ'] = False
+            self.ret['err'] = e if e != '' else e.log_message
+        finally:
+            self.write(json.dump(self.ret, cls=DatetimeEncoder))
+            util.ignoreException(lambda : loghelper.add_log_record(ip=self.request.remote_ip, req_item=self.__class__.__name__))
+    return wrapper
+

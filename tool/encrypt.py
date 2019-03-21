@@ -6,7 +6,7 @@ import random
 
 def encrypt_password(password, salt=None):
     if salt is None:
-        #salt = os.urandom(8)
+        # salt = os.urandom(8)
         salt = generate_random_str(random_length=8)
 
     assert 8 == len(salt)

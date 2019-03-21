@@ -46,3 +46,9 @@ def modify_pwd(param):
         userDao.update_pwd(user_model)
         return True
     return False
+
+
+def query_user_info(param):
+    """query user info"""
+    user_id = param['ID']
+    return query_user_info(user_id)
