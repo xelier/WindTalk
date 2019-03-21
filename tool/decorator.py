@@ -56,6 +56,5 @@ def get_exception(func):
             self.ret['err'] = e if e != '' else e.log_message
         finally:
             self.write(json.dump(self.ret, cls=DatetimeEncoder))
-            util.ignoreException(lambda : loghelper.add_log_record(ip=self.request.remote_ip, req_item=self.__class__.__name__))
     return wrapper
 

@@ -75,40 +75,45 @@ CREATE TABLE `IMAGE` (
 DROP TABLE IF EXISTS `SEQUENCE`;
 
 CREATE TABLE `SEQUENCE` (
-  `name` varchar(50) COLLATE utf8_bin NOT NULL COMMENT '序列的名字',
-  `current_value` int(11) NOT NULL COMMENT '序列的当前值',
-  `increment` int(11) NOT NULL DEFAULT '1' COMMENT '序列的自增值',
-  PRIMARY KEY (`name`)
+  `NAME` varchar(50) COLLATE utf8_bin NOT NULL COMMENT '序列的名字',
+  `CURRENT_VALUE` int(11) NOT NULL COMMENT '序列的当前值',
+  `INCREMENT` int(11) NOT NULL DEFAULT '1' COMMENT '序列的自增值',
+  PRIMARY KEY (`NAME`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
 
-
-CREATE TABLE `SEQUENCE` (
-  `name` varchar(50) COLLATE utf8_bin NOT NULL COMMENT '序列的名字',
-  `current_value` int(11) NOT NULL COMMENT '序列的当前值',
-  `increment` int(11) NOT NULL DEFAULT '1' COMMENT '序列的自增值',
-  PRIMARY KEY (`name`)
-)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
-
-
-
-DROP FUNCTION IF EXISTS currval;
-CREATE  FUNCTION currval(seq_name VARCHAR(50)) RETURNS int(11)
+DROP FUNCTION IF EXISTS CURRVAL;
+CREATE  FUNCTION CURRVAL(seq_name VARCHAR(50)) RETURNS int(11)
     READS SQL DATA
     DETERMINISTIC
 BEGIN
 DECLARE VALUE INTEGER;
 SET VALUE = 0;
-SELECT current_value INTO VALUE FROM sequence WHERE NAME = seq_name;
+SELECT CURRENT_VALUE INTO VALUE FROM SEQUENCE WHERE NAME = seq_name;
 RETURN VALUE;
 END
 
 
 
-DROP FUNCTION IF EXISTS nextval;
-CREATE FUNCTION nextval (seq_name VARCHAR(50))
+DROP FUNCTION IF EXISTS NEXTVAL;
+CREATE FUNCTION NEXTVAL (seq_name VARCHAR(50))
+     RETURNS INTEGER
+     LANGUAGE SQL
+     DETERMINISTIC
+     CONTAINS SQL
+     SQL SECURITY DEFINER
+     COMMENT ''
+BEGIN
+     UPDATE SEQUENCE
+          SET CURRENT_VALUE = CURRENT_VALUE + INCREMENT
+          WHERE NAME = seq_name;
+     RETURN currval(seq_name);
+END
+
+
+DROP FUNCTION IF EXISTS SETVAL;
+CREATE FUNCTION SETVAL (seq_name VARCHAR(50), value INTEGER)
      RETURNS INTEGER
      LANGUAGE SQL
      DETERMINISTIC
@@ -117,36 +122,32 @@ CREATE FUNCTION nextval (seq_name VARCHAR(50))
      COMMENT ''
 BEGIN
      UPDATE sequence
-          SET current_value = current_value + increment
-          WHERE name = seq_name;
-     RETURN currval(seq_name);
-END
-
-
-DROP FUNCTION IF EXISTS setval;
-CREATE FUNCTION setval (seq_name VARCHAR(50), value INTEGER)
-     RETURNS INTEGER
-     LANGUAGE SQL
-     DETERMINISTIC
-     CONTAINS SQL
-     SQL SECURITY DEFINER
-     COMMENT ''
-BEGIN
-     UPDATE sequence
-          SET current_value = value
-          WHERE name = seq_name;
-     RETURN currval(seq_name);
+          SET CURRENT_VALUE = value
+          WHERE NAME = seq_name;
+     RETURN CURRVAL(seq_name);
 END
 
 
 
-INSERT INTO sequence VALUES ('USER_ID_SEQ', 0, 1);/*添加一个sequence名称和初始值，以及自增幅度*/
+INSERT INTO SEQUENCE VALUES ('USER_ID_SEQ', 0, 1);/*添加一个sequence名称和初始值，以及自增幅度*/
 
 SELECT SETVAL('USER_ID_SEQ', 1);/*设置指定sequence的初始值*/
 
 SELECT CURRVAL('USER_ID_SEQ');/*查询指定sequence的当前值*/
 
 SELECT NEXTVAL('USER_ID_SEQ');/*查询指定sequence的下一个值*/
+
+
+
+DROP TABLE IF EXISTS `OP_LOG`;
+
+CREATE TABLE `OP_LOG` (
+  `IP_HOST` varchar(50) COLLATE utf8_bin COMMENT '来源ip',
+  `INTERFACE_NAME`  varchar(50) COLLATE utf8_bin COMMENT '接口名',
+  `TIME` TIMESTAMP DEFAULT NOW() COMMENT '时间',
+  `ID` int(11) DEFAULT '-1' COMMENT '操作人'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
 
 
 
