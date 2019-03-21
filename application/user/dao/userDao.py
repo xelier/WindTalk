@@ -13,7 +13,7 @@ def delete_user(user_id):
 
 def update_pwd(param):
     """update password"""
-    return sqlhelper.update_table('USER', {'ID': param['ID']}, {'PASSWORD': param['NEW_PWD']})
+    return sqlhelper.update_table('USER', {'ID': param['ID']}, {'PASSWORD': param['PASSWORD']})
 
 
 def update_user_info(param):

@@ -1,46 +1,48 @@
 # coding:utf-8
-import base64
 
 from core import sqlhelper
 from application.user.dao import userDao
+from tool import encrypt
 
 
 def login(username, password, role):
     """login method"""
-    ret = sqlhelper.get_record_by_param('user', {'username': username, 'password': password, 'role': role})
-    if ret:
-        return ret['username']
-    return None
+    ret = sqlhelper.get_record_by_param('USER', {'USERNAME': username, 'ROLE': role})
+    return encrypt.validate_password(ret['PASSWORD'], password)
 
 
-def register(param, user_model=None):
+def register(param):
     """
     It is necessary to check the username's existing before insert a record to table user.
     """
-    user_model['ID'] = sqlhelper.generate_id_by_sequence_name("USER_ID_SEQ")
-    user_model['USERNAME'] = param['USERNAME']
-    user_model['PASSWORD'] = param['PASSWORD']
-    user_model['NICKNAME'] = param['NICKNAME']
-    user_model['ROLE'] = param['ROLE']
-    user_model['EMAIL'] = param['EMAIL']
+    user_model = {'ID': sqlhelper.generate_id_by_sequence_name("USER_ID_SEQ"), 'USERNAME': param['USERNAME'],
+                  'PASSWORD': encrypt.encrypt_password(param['PASSWORD']), 'NICKNAME': param['NICKNAME'], 'ROLE': param['ROLE'],
+                  'EMAIL': param['EMAIL']}
     ret = userDao.query_user_info_by_name(user_model['USERNAME'])
-    if ret:
-        return False
-    else:
+    if not ret:
         userDao.add_user(user_model)
         return True
+    return False
 
 
-def modify(param, user_model=None):
-    user_model['ID'] = sqlhelper.generate_id_by_sequence_name("USER_ID_SEQ")
-    user_model['USERNAME'] = param['USERNAME']
-    user_model['PASSWORD'] = param['PASSWORD']
-    user_model['NICKNAME'] = param['NICKNAME']
-    user_model['ROLE'] = param['ROLE']
-    user_model['EMAIL'] = param['EMAIL']
+def modify(param):
+    """check the user's existence before update"""
+    user_model = {'ID': param['ID'], 'USERNAME': param['USERNAME'],
+                  'NICKNAME': param['NICKNAME'], 'ROLE': param['ROLE'],
+                  'EMAIL': param['EMAIL']}
     ret = userDao.query_user_info_by_name(user_model['USERNAME'])
     if ret:
         userDao.update_user_info(user_model)
         return True
-    else:
-        return False
+    return False
+
+
+def modify_pwd(param):
+    """check the user's existence before update"""
+    ret = userDao.query_user_info(param['ID'])
+    origin_pwd = encrypt.encrypt_password(param['ORIGIN_PASSWORD'], salt=ret['PASSWORD'][:8])
+    if ret and encrypt.validate_password(ret['PASSWORD'], origin_pwd):
+        user_model = {'ID': param['ID'], 'PASSWORD': encrypt.encrypt_password(param['PASSWORD'])}
+        userDao.update_pwd(user_model)
+        return True
+    return False

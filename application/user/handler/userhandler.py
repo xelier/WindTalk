@@ -19,11 +19,11 @@ class IndexHandler(tornado.web.RequestHandler, ABC):
     def post(self):
         user = sqlhelper.get_all_record_list('user', {})
         res = []
-        userinfo = {}
+        user_info = {}
         for us in user:
-            userinfo['username'] = us['username']
-            userinfo['profile'] = us['profile']
-            res.append(userinfo)
+            user_info['username'] = us['username']
+            user_info['profile'] = us['profile']
+            res.append(user_info)
         self.ret['data'] = res
 
 
@@ -31,12 +31,12 @@ class LoginHandler(tornado.web.RequestHandler, ABC):
     @decorator.post_exception
     @tornado.web.authenticated
     def post(self):
-        jsonData = json.loads(self.request.body)
-        username = jsonData['username']
-        password = jsonData['password']
-        role = jsonData['role']
+        json_data = json.loads(self.request.body)
+        username = json_data['USERNAME']
+        password = json_data['PASSWORD']
+        role = json_data['ROLE']
         ret = userhelper.login(username, password, role)
-        if ret is None:
+        if not ret:
             self.ret['succ'] = False
             self.ret['err'] = 'User not exits or Password is wrong'
         else:
