@@ -8,18 +8,21 @@ from tool import encrypt
 def login(username, password, role):
     """login method"""
     ret = sqlhelper.get_record_by_param('USER', {'USERNAME': username, 'ROLE': role})
-    return encrypt.validate_password(ret['PASSWORD'], password)
+    if encrypt.validate_password(ret['PASSWORD'], password):
+        return ret
+    return False
 
 
 def register(param):
     """
     It is necessary to check the username's existing before insert a record to table user.
     """
-    user_model = {'ID': sqlhelper.generate_id_by_sequence_name("USER_ID_SEQ"), 'USERNAME': param['USERNAME'],
+    user_model = {'USERNAME': param['USERNAME'],
                   'PASSWORD': encrypt.encrypt_password(param['PASSWORD']), 'NICKNAME': param['NICKNAME'], 'ROLE': param['ROLE'],
                   'EMAIL': param['EMAIL']}
     ret = userDao.query_user_info_by_name(user_model['USERNAME'])
     if not ret:
+        user_model['ID'] = sqlhelper.generate_id_by_sequence_name("USER_ID_SEQ")
         userDao.add_user(user_model)
         return True
     return False

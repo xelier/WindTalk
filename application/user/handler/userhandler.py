@@ -12,6 +12,17 @@ from application.user.helper import userhelper
 # @decorator.exception
 # def get(self):
 #     self.render('index.html')
+
+class BaseHandler(tornado.web.RequestHandler, ABC):
+    def get_current_user(self):
+        return self.get_secure_cookie("ID")
+
+
+class WelcomeHandler(tornado.web.RequestHandler, ABC):
+    def get(self):
+        self.render('index.html', user=self.current_user)
+
+
 class RegisterHandler(tornado.web.RequestHandler, ABC):
     @decorator.post_exception
     def post(self):
@@ -33,12 +44,14 @@ class LoginHandler(tornado.web.RequestHandler, ABC):
         username = json_data['USERNAME']
         password = json_data['PASSWORD']
         role = json_data['ROLE']
-        ret = userhelper.login(username, password, role)
-        if not ret:
+        result = userhelper.login(username, password, role)
+        if result is False:
             self.ret['succ'] = False
             self.ret['err'] = 'User not exits or Password is wrong'
         else:
-            self.ret['data']['username'] = ret
+            self.ret['data']['USERNAME'] = result['USERNAME']
+            self.set_secure_cookie("USERNAME", result['USERNAME'])
+            self.set_secure_cookie("ID", str(result['ID']))
 
 
 class ModifyUser(tornado.web.RequestHandler, ABC):
@@ -84,4 +97,7 @@ class GetUserInfo(tornado.web.RequestHandler, ABC):
 
 
 class UserExit(tornado.web.RequestHandler, ABC):
-    pass
+    def post(self):
+        self.clear_cookie("ID")
+        self.clear_cookie("USERNAME")
+        self.redirect("/")

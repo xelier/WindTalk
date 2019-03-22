@@ -22,7 +22,8 @@ class Application(tornado.web.Application):
             static_path=os.path.join(os.path.dirname(__file__), "web/static"),
             xsrf_cookies=False,
             debug=True,
-            cookie_secret="Ck+z+ODuQ9CeS1XJHN6sYI5mn99x50ZkkLn/WDHclC0="
+            cookie_secret="Ck+z+ODuQ9CeS1XJHN6sYI5mn99x50ZkkLn/WDHclC0=",
+            login_url="/"
         )
         tornado.web.Application.__init__(self, handlers, **settings)
 
@@ -31,9 +32,9 @@ def main():
     try:
         print("Start cron job background controler.")
         tornado.options.parse_command_line()
-        httpserver = Application()
+        http_server = Application()
         print("Port: ", options.port)
-        httpserver.listen(options.port, max_buffer_size=_conf.MAX_BUFFER_SIZE)
+        http_server.listen(options.port, max_buffer_size=_conf.MAX_BUFFER_SIZE)
         print("Start IOLoop.")
         tornado.ioloop.IOLoop.instance().start()
     except Exception as e:

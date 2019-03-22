@@ -39,8 +39,9 @@ def post_exception(func):
             self.ret['succ'] = False
             self.ret['err'] = e if e != '' else e.log_message
         finally:
-            self.write(json.dumps(self.ret, cls=DatetimeEncoder))
-            util.ignoreException(lambda: loghelper.add_log_record(ip=self.request.remote_ip, req_item=self.__class__.__name__))
+            if not self._finished:
+                self.write(json.dumps(self.ret, cls=DatetimeEncoder))
+                util.ignoreException(lambda: loghelper.add_log_record(ip=self.request.remote_ip, req_item=self.__class__.__name__))
     return wrapper
 
 
@@ -55,6 +56,7 @@ def get_exception(func):
             self.ret['succ'] = False
             self.ret['err'] = e if e != '' else e.log_message
         finally:
-            self.write(json.dump(self.ret, cls=DatetimeEncoder))
+            if not self._finished:
+                self.write(json.dumps(self.ret, cls=DatetimeEncoder))
     return wrapper
 

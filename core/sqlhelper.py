@@ -56,7 +56,7 @@ def execute(query, ExecuteNoQuery=False, dictCursor=False):
             ret = count
         else:
             ret = cur.fetchmany(count)
-            # conn.commit()
+            conn.commit()
     except Exception as e:
         log.info('Error when execute SQL string. Exception: %s' % e)
     finally:
@@ -294,7 +294,7 @@ def get_page_num(table, paramDict, pagesize):
 
 def generate_id_by_sequence_name(seqName):
     """generate a id by sequence name"""
-    sql = "select nextval(%s) ID" % seqName
+    sql = "SELECT NEXTVAL('%s') ID" % pymysql.escape_string(seqName)
     result = execute(sql, dictCursor=True)
     return result[0]['ID']
 
