@@ -211,7 +211,7 @@ def delete_record_by_param(table, paramDict):
     return True
 
 
-def get_all_record_list(table, paramDict ):
+def get_all_record_list(table, param_dict):
     """
     查询所有数据
     :param table:
@@ -221,13 +221,13 @@ def get_all_record_list(table, paramDict ):
     :return:
     """
     sql = "select * from %s " % table
-    if paramDict is not None and len(paramDict) > 0:
+    if param_dict is not None and len(param_dict) > 0:
         sql += "where "
-        for key, val in paramDict.items():
+        for key, val in param_dict.items():
             sql += "%s = '%s' and " % (key, pymysql.escape_string(val))
         sql = sql[:-5]
     result = execute(sql, dictCursor=True)
-    return result
+    return list(result)
 
 
 def get_all_record_num(table, paramDict):

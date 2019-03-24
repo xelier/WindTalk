@@ -6,7 +6,6 @@ import tornado.web
 import tool.decorator as decorator
 from application.article.helper import articleHelper
 from application.user.handler.userHandler import BaseHandler
-from application.user.helper import userHelper
 
 
 # something should be shown while step into the home page
@@ -60,10 +59,9 @@ class ModifyArticleHandler(BaseHandler, ABC):
 
 
 class QueryArticleListHandler(BaseHandler, ABC):
-    @tornado.web.authenticated
-    @decorator.post_exception
-    def post(self):
-        json_data = json.load(self.request.body)
+    @decorator.get_exception
+    def get(self):
+        json_data = json.load(self.get_argument('param'))
         ret = articleHelper.query_list(json_data)
         if ret:
             self.ret['succ'] = True
@@ -75,7 +73,6 @@ class QueryArticleListHandler(BaseHandler, ABC):
 
 class QueryArticleInfoHandler(BaseHandler, ABC):
     @decorator.get_exception
-    @tornado.web.authenticated
     def get(self):
         json_data = json.load(self.get_argument('param'))
         ret = articleHelper.query_info(json_data)

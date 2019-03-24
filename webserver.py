@@ -16,7 +16,7 @@ define("port", default=8888, help='Running in given port', type=int)
 
 class Application(tornado.web.Application):
     def __init__(self):
-        handlers = urlhandler.urlhandlers
+        handlers = urlhandler.url_handlers
         settings = dict(
             template_path=os.path.join(os.path.dirname(__file__), "web/template"),
             static_path=os.path.join(os.path.dirname(__file__), "web/static"),
