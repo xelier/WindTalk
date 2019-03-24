@@ -18,7 +18,9 @@ def update_pwd(param):
 
 def update_user_info(param):
     """get user password"""
-    return sqlhelper.update_table('USER', {'ID': param['ID']}, param)
+    update_param = param
+    del update_param['ID']
+    return sqlhelper.update_table('USER', {'ID': param['ID']}, update_param)
 
 
 def query_user_info(user_id):
