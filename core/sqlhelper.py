@@ -249,46 +249,53 @@ def get_all_record_num(table, paramDict):
     return int(ret)
 
 
-def get_page_list(table, paramDict, pageid, pagesize):
+def get_page_list(table, param_dict, page_index, pagesize, field_list=None):
     """
     分页查询
     :param table:
-    :param paramDict:
-    :param pageid:
+    :param param_dict:
+    :param page_index:
     :param pagesize:
+    :param field_list
     :return:
     """
-    sql = "select * from %s " % table
-    if paramDict is not None and len(paramDict) > 0:
+    field_str = '*'
+    if field_list is not None:
+        field_str = ''
+        for field in field_list:
+            field_str += field+','
+        field_str = field_str[:-1]
+    sql = "select %s from %s " % (field_str, table)
+    if param_dict is not None and len(param_dict) > 0:
         sql += "where "
-        for key, val in paramDict.items():
+        for key, val in param_dict.items():
             sql += "%s = '%s' and " % (key, pymysql.escape_string(val))
         sql = sql[:-5]
-    sql += " limit %d, %d" % (pageid*pagesize, pagesize)
+    sql += " limit %d, %d" % (page_index*pagesize, pagesize)
     result = execute(sql, dictCursor=True)
     return list(result)
 
 
-def get_page_num(table, paramDict, pagesize):
+def get_page_num(table, param_dict, page_size):
     """
     查询有多少页
     :param table:
-    :param paramDict:
-    :param pagesize:
+    :param param_dict:
+    :param page_size:
     :return:
     """
     sql = "select count(*) pagenum from %s " % table
-    if paramDict is not None and len(paramDict) > 0:
+    if param_dict is not None and len(param_dict) > 0:
         sql += "where "
-        for key, val in paramDict.items():
+        for key, val in param_dict.items():
             sql += "%s = '%s' and " % (key, pymysql.escape_string(val))
         sql = sql[:-5]
     result = execute(sql, dictCursor=True)
     ret = int(result[0]['pagenum'])
-    if ret % pagesize > 0:
-        ret = ret/pagesize + 1
+    if ret % page_size > 0:
+        ret = ret/page_size + 1
     else:
-        ret = ret/pagesize
+        ret = ret/page_size
     return int(ret)
 
 

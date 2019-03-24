@@ -4,7 +4,7 @@ from abc import ABC
 
 import tornado.web
 import tool.decorator as decorator
-from application.user.helper import userhelper
+from application.user.helper import userHelper
 
 
 # something should be shown while step into the home page
@@ -18,25 +18,25 @@ class BaseHandler(tornado.web.RequestHandler, ABC):
         return self.get_secure_cookie("ID")
 
 
-class WelcomeHandler(tornado.web.RequestHandler, ABC):
+class WelcomeHandler(BaseHandler, ABC):
     def get(self):
         self.render('index.html', user=self.current_user)
 
 
-class RegisterHandler(tornado.web.RequestHandler, ABC):
+class RegisterHandler(BaseHandler, ABC):
     @decorator.post_exception
     def post(self):
         json_data = json.loads(self.request.body)
-        ret = userhelper.register(json_data)
+        ret = userHelper.register(json_data)
         if ret:
             self.ret['succ'] = True
             self.ret['data']['resultDesc'] = 'Register Successful'
         else:
             self.ret['succ'] = False
-            self.ret['err'] = 'User Has benn Exists'
+            self.ret['err'] = 'User Has been Exists'
 
 
-class LoginHandler(tornado.web.RequestHandler, ABC):
+class LoginHandler(BaseHandler, ABC):
     @decorator.post_exception
     # @tornado.web.authenticated
     def post(self):
@@ -44,22 +44,24 @@ class LoginHandler(tornado.web.RequestHandler, ABC):
         username = json_data['USERNAME']
         password = json_data['PASSWORD']
         role = json_data['ROLE']
-        result = userhelper.login(username, password, role)
+        result = userHelper.login(username, password, role)
         if result is False:
             self.ret['succ'] = False
             self.ret['err'] = 'User not exits or Password is wrong'
         else:
+            self.ret['succ'] = True
             self.ret['data']['USERNAME'] = result['USERNAME']
             self.set_secure_cookie("USERNAME", result['USERNAME'])
             self.set_secure_cookie("ID", str(result['ID']))
 
 
-class ModifyUser(tornado.web.RequestHandler, ABC):
+class ModifyUserHandler(BaseHandler, ABC):
     @decorator.post_exception
     @tornado.web.authenticated
     def post(self):
         json_data = json.load(self.request.body)
-        ret = userhelper.modify(json_data)
+        json_data['ID'] = self.get_secure_cookie('ID')
+        ret = userHelper.modify(json_data)
         if ret:
             self.ret['succ'] = True
             self.ret['data']['resultDesc'] = 'Update Profile Successful'
@@ -68,12 +70,13 @@ class ModifyUser(tornado.web.RequestHandler, ABC):
             self.ret['err'] = 'User Not Exist'
 
 
-class ModifyPwd(tornado.web.RequestHandler, ABC):
+class ModifyPwdHandler(BaseHandler, ABC):
     @tornado.web.authenticated
     @decorator.post_exception
     def post(self):
         json_data = json.load(self.request.body)
-        ret = userhelper.modify_pwd(json_data)
+        json_data['ID'] = self.get_secure_cookie('ID')
+        ret = userHelper.modify_pwd(json_data)
         if ret:
             self.ret['succ'] = True
             self.ret['data']['resultDesc'] = 'Update Password Successful'
@@ -82,12 +85,13 @@ class ModifyPwd(tornado.web.RequestHandler, ABC):
             self.ret['err'] = 'User Not Exist Or Origin Password Is Wrong'
 
 
-class GetUserInfo(tornado.web.RequestHandler, ABC):
+class GetUserInfoHandler(BaseHandler, ABC):
     @decorator.get_exception
     @tornado.web.authenticated
     def get(self):
         json_data = json.load(self.get_argument('param'))
-        ret = userhelper.query_user_info(json_data)
+        ret = userHelper.query_user_info(json_data)
+        ret['ID'] = self.get_secure_cookie('ID')
         if ret:
             self.ret['succ'] = True
             self.ret['data'] = ret
@@ -96,7 +100,7 @@ class GetUserInfo(tornado.web.RequestHandler, ABC):
             self.ret['err'] = 'User Not Exist'
 
 
-class UserExit(tornado.web.RequestHandler, ABC):
+class UserExitHandler(BaseHandler, ABC):
     def post(self):
         self.clear_cookie("ID")
         self.clear_cookie("USERNAME")

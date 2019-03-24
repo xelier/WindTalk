@@ -1,11 +1,11 @@
-from application.user.handler import userhandler
+from application.user.handler import userHandler
 
 urlhandlers = [
-    (r"/", userhandler.WelcomeHandler),
-    (r"/register", userhandler.RegisterHandler),
-    (r"/login", userhandler.LoginHandler),
-    (r"/modifyUser", userhandler.ModifyUser),
-    (r"/modifyPwd", userhandler.ModifyPwd),
-    (r"/getUserInfo", userhandler.GetUserInfo),
-    (r"/logout", userhandler.UserExit)
+    (r"/", userHandler.WelcomeHandler),
+    (r"/register", userHandler.RegisterHandler),
+    (r"/login", userHandler.LoginHandler),
+    (r"/modifyUser", userHandler.ModifyUserHandler),
+    (r"/modifyPwd", userHandler.ModifyPwdHandler),
+    (r"/getUserInfo", userHandler.GetUserInfoHandler),
+    (r"/logout", userHandler.UserExitHandler)
 ]
