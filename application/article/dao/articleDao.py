@@ -23,13 +23,13 @@ def query_article_info(article_id):
 
 def query_article_list(param):
     """query article information"""
-    return sqlhelper.get_page_list('ARTICLE', param['CONDITION'], param['PAGE_INDEX'], param['PAGE_SIZE'], field_list=param['FIELDS'])
+    return sqlhelper.get_page_list('ARTICLE', param['CONDITION'], int(param['PAGE_INDEX']), int(param['PAGE_SIZE']), field_list=param['FIELDS'])
 
 
 def query_article_list_count(param):
     """query article info count"""
     ret = {'RECORD_NUM': sqlhelper.get_all_record_num('ARTICLE', param['CONDITION']),
-           'PAGE_COUNT': sqlhelper.get_page_num('ARTICLE', param['CONDITION'], param['PAGE_SIZE'])}
+           'PAGE_COUNT': sqlhelper.get_page_num('ARTICLE', param['CONDITION'], int(param['PAGE_SIZE']))}
     return ret
 
 

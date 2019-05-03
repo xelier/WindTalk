@@ -2,6 +2,7 @@
 import functools
 import json
 import traceback
+from datetime import datetime, date
 
 import tornado.web
 
@@ -23,8 +24,10 @@ def exception(func):
 
 class DatetimeEncoder(json.JSONEncoder):
     def default(self, o):
-        if isinstance(self, o):
+        if isinstance(o, datetime):
             return o.strftime('%Y-%M-%D %H:%M:%S')
+        elif isinstance(o, date):
+            return o.strftime('%Y-%M-%D')
         return json.JSONEncoder.default(self, o)
 
 
@@ -56,6 +59,7 @@ def get_exception(func):
             self.ret['succ'] = False
             self.ret['err'] = e if e != '' else e.log_message
         finally:
+            # pass
             if not self._finished:
                 self.write(json.dumps(self.ret, cls=DatetimeEncoder))
     return wrapper

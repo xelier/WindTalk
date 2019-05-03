@@ -47,7 +47,7 @@ class ModifyArticleHandler(BaseHandler, ABC):
     @decorator.post_exception
     @tornado.web.authenticated
     def post(self):
-        json_data = json.load(self.request.body)
+        json_data = json.loads(self.request.body)
         json_data['ID'] = self.current_user
         ret = articleHelper.modify(json_data)
         if ret:
@@ -61,7 +61,7 @@ class ModifyArticleHandler(BaseHandler, ABC):
 class QueryArticleListHandler(BaseHandler, ABC):
     @decorator.get_exception
     def get(self):
-        json_data = json.load(self.get_argument('param'))
+        json_data = json.loads(self.get_argument('param'))
         ret = articleHelper.query_list(json_data)
         if ret:
             self.ret['succ'] = True
@@ -74,7 +74,7 @@ class QueryArticleListHandler(BaseHandler, ABC):
 class QueryArticleInfoHandler(BaseHandler, ABC):
     @decorator.get_exception
     def get(self):
-        json_data = json.load(self.get_argument('param'))
+        json_data = json.loads(self.get_argument('param'))
         ret = articleHelper.query_info(json_data)
         if ret:
             self.ret['succ'] = True

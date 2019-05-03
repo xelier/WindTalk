@@ -45,10 +45,10 @@ def modify(param):
 def query_list(param):
     """add necessary param to the article's list"""
     article_param = {'CONDITION': param['CONDITION'], 'PAGE_INDEX': param['PAGE_INDEX'], 'PAGE_SIZE': param['PAGE_SIZE'],
-                     'FIELDS': ['ARTICLE_ID', 'TITLE', 'DESCRIPTION', 'CREATE_USER', 'CREATE_USER']}
+                     'FIELDS': ['ARTICLE_ID', 'TITLE', 'DESCRIPTION', 'CREATE_USER', 'CREATE_TIME']}
     article_list = articleDao.query_article_list(article_param)
     article_page_info = articleDao.query_article_list_count(article_param)
-    ret = {'RESULT_LIST': article_list, 'RECORD_NUM': article_page_info['RECORD_NUM'], 'PAGE_COUNT':article_page_info['PAGE_COUNT']}
+    ret = {'RESULT_LIST': article_list, 'RECORD_NUM': article_page_info['RECORD_NUM'], 'PAGE_COUNT': article_page_info['PAGE_COUNT']}
     return ret
 
 
