@@ -21,7 +21,7 @@ class AddCommentHandler(BaseHandler, ABC):
 class DeleteCommentHandler(BaseHandler, ABC):
     @decorator.post_exception
     def post(self):
-        json_data = json.load(self.request.body)
+        json_data = json.loads(self.request.body)
         ret = commentHelper.delete(json_data)
         if ret:
             self.ret['succ'] = True
@@ -34,7 +34,7 @@ class DeleteCommentHandler(BaseHandler, ABC):
 class QueryCommentListHandler(BaseHandler, ABC):
     @decorator.get_exception
     def get(self):
-        json_data = self.get_argument("param")
+        json_data = json.loads(self.get_argument("param"))
         ret = commentHelper.query_comment_list(json_data)
         if ret:
             self.ret['succ'] = True
