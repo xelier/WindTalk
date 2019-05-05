@@ -95,7 +95,7 @@ def current_datetime():
     """
     当前时间格式化字符串
     """
-    return datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    return datetime.datetime.now().strftime("%Y-%m-%d")
 
 
 def randstr(length, alphabet='abcdefghijklmnopqrstuvwxyz0123456789'):

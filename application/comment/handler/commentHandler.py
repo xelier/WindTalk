@@ -8,7 +8,7 @@ from application.user.handler.userHandler import BaseHandler
 class AddCommentHandler(BaseHandler, ABC):
     @decorator.post_exception
     def post(self):
-        json_data = json.dumps(self.request.body)
+        json_data = json.loads(self.request.body)
         ret = commentHelper.add(json_data)
         if ret:
             self.ret['succ'] = True

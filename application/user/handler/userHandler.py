@@ -20,7 +20,7 @@ class BaseHandler(tornado.web.RequestHandler, ABC):
     def set_default_headers(self):
         self.set_header("Access-Control-Allow-Origin", "*")  # 这个地方可以写域名
         self.set_header("Access-Control-Allow-Headers", "x-requested-with")
-        self.set_header('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
+        self.set_header('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS')
 
 
 class WelcomeHandler(BaseHandler, ABC):

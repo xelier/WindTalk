@@ -7,7 +7,7 @@ from application.article.dao import articleDao
 
 def add(param):
     """add an article"""
-    article_param = {'CONTENT': param['CONTENT'], 'CREATE_TIME': datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+    article_param = {'CONTENT': param['CONTENT'], 'CREATE_TIME': datetime.datetime.now().strftime("%Y-%m-%d"),
                      'TITLE': param['TITLE'], 'CREATE_USER': param['ID'],
                      'DESCRIPTION': param['CONTENT'][:200]+'...' if len(param['CONTENT']) > 200 else param['CONTENT']+'...'}
     ret = sqlhelper.get_record_by_param('ARTICLE', {'TITLE': param['TITLE']})
@@ -30,7 +30,7 @@ def delete(param):
 
 def modify(param):
     """check the article's existence before update"""
-    article_param = {'CONTENT': param['CONTENT'], 'CREATE_TIME': datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+    article_param = {'CONTENT': param['CONTENT'], 'CREATE_TIME': datetime.datetime.now().strftime("%Y-%m-%d"),
                      'TITLE': param['TITLE'], 'CREATE_USER': param['ID'],
                      'DESCRIPTION': param['CONTENT'][:200] + '...' if len(param['CONTENT']) > 200 else param['CONTENT'] + '...',
                      'ARTICLE_ID': param['ARTICLE_ID']

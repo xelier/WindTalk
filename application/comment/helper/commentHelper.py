@@ -7,7 +7,7 @@ from core import sqlhelper
 def add(param):
     """add a comment"""
     comment_model = {'ARTICLE_ID': param['ARTICLE_ID'], 'EMAIL': param['EMAIL'], 'CONTENT': param['CONTENT'],
-                     'CREATE_TIME':  datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                     'CREATE_TIME':  datetime.datetime.now().strftime("%Y-%m-%d"),
                      'COMMENT_ID': sqlhelper.generate_id_by_sequence_name('COMMENT_ID_SEQ')}
     return commentDao.add_comment(comment_model)
 
