@@ -7,3 +7,5 @@ nginx启动：/usr/local/nginx/sbin/nginx
 停止：/usr/local/nginx/sbin/nginx –s stop
 测试配置文件是否正常：/usr/local/nginx/sbin/nginx –t
 强制关闭：pkill nginx
+
+查看nginx版本和配置文件路径：nginx -V
