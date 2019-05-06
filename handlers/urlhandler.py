@@ -4,20 +4,20 @@ from application.article.handler import articleHandler
 
 url_handlers = [
     (r"/", userHandler.WelcomeHandler),
-    (r"/register", userHandler.RegisterHandler),
-    (r"/login", userHandler.LoginHandler),
-    (r"/modifyUser", userHandler.ModifyUserHandler),
-    (r"/modifyPwd", userHandler.ModifyPwdHandler),
-    (r"/getUserInfo", userHandler.GetUserInfoHandler),
-    (r"/logout", userHandler.UserExitHandler),
+    (r"/rmt/register", userHandler.RegisterHandler),
+    (r"/rmt/login", userHandler.LoginHandler),
+    (r"/rmt/modifyUser", userHandler.ModifyUserHandler),
+    (r"/rmt/modifyPwd", userHandler.ModifyPwdHandler),
+    (r"/rmt/getUserInfo", userHandler.GetUserInfoHandler),
+    (r"/rmt/logout", userHandler.UserExitHandler),
 
-    (r"/addArticle", articleHandler.AddArticleHandler),
-    (r"/deleteArticle", articleHandler.DeleteArticleHandler),
-    (r"/modifyArticle", articleHandler.ModifyArticleHandler),
-    (r"/queryArticleList", articleHandler.QueryArticleListHandler),
-    (r"/queryArticleInfo", articleHandler.QueryArticleInfoHandler),
+    (r"/rmt/addArticle", articleHandler.AddArticleHandler),
+    (r"/rmt/deleteArticle", articleHandler.DeleteArticleHandler),
+    (r"/rmt/modifyArticle", articleHandler.ModifyArticleHandler),
+    (r"/rmt/queryArticleList", articleHandler.QueryArticleListHandler),
+    (r"/rmt/queryArticleInfo", articleHandler.QueryArticleInfoHandler),
 
-    (r"/addComment", commentHandler.AddCommentHandler),
-    (r"/deleteComment", commentHandler.DeleteCommentHandler),
-    (r"/queryCommentList", commentHandler.QueryCommentListHandler)
+    (r"/rmt/addComment", commentHandler.AddCommentHandler),
+    (r"/rmt/deleteComment", commentHandler.DeleteCommentHandler),
+    (r"/rmt/queryCommentList", commentHandler.QueryCommentListHandler)
 ]
