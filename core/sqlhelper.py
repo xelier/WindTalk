@@ -4,7 +4,7 @@ connect to mysql database
 """
 import tool.log as log
 import pymysql
-import config.config as config
+import custcfg.custcfg as config
 from DBUtils.PooledDB import PooledDB
 
 global pool

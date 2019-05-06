@@ -6,7 +6,7 @@ import tornado.httpserver
 import tornado.ioloop
 import tornado.options
 import tornado.web
-import config.config as _conf
+import custcfg.custcfg as _conf
 from tornado.options import define, options
 
 from handlers import urlhandler
