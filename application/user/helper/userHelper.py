@@ -8,8 +8,9 @@ from tool import encrypt
 def login(username, password, role):
     """login method"""
     ret = sqlhelper.get_record_by_param('USER', {'USERNAME': username, 'ROLE': role})
-    if encrypt.validate_password(ret['PASSWORD'], password):
-        return ret
+    if ret is not None:
+        if encrypt.validate_password(ret['PASSWORD'], password):
+            return ret
     return False
 
 

@@ -10,6 +10,7 @@ url_handlers = [
     (r"/rmt/modifyPwd", userHandler.ModifyPwdHandler),
     (r"/rmt/getUserInfo", userHandler.GetUserInfoHandler),
     (r"/rmt/logout", userHandler.UserExitHandler),
+    (r"/rmt/currentUser", userHandler.CurrentUserHandler),
 
     (r"/rmt/addArticle", articleHandler.AddArticleHandler),
     (r"/rmt/deleteArticle", articleHandler.DeleteArticleHandler),

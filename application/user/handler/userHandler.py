@@ -15,7 +15,7 @@ from application.user.helper import userHelper
 
 class BaseHandler(tornado.web.RequestHandler, ABC):
     def get_current_user(self):
-        return self.get_secure_cookie("ID")
+        return self.get_cookie("ID")
 
     def set_default_headers(self):
         self.set_header("Access-Control-Allow-Origin", "*")  # 这个地方可以写域名
@@ -48,7 +48,7 @@ class LoginHandler(BaseHandler, ABC):
         json_data = json.loads(self.request.body)
         username = json_data['USERNAME']
         password = json_data['PASSWORD']
-        role = json_data['ROLE']
+        role = '0'
         result = userHelper.login(username, password, role)
         if result is False:
             self.ret['succ'] = False
@@ -56,8 +56,8 @@ class LoginHandler(BaseHandler, ABC):
         else:
             self.ret['succ'] = True
             self.ret['data']['USERNAME'] = result['USERNAME']
-            self.set_secure_cookie("USERNAME", result['USERNAME'])
-            self.set_secure_cookie("ID", str(result['ID']))
+            self.set_cookie("USERNAME", result['USERNAME'])
+            self.set_cookie("ID", str(result['ID']))
 
 
 class ModifyUserHandler(BaseHandler, ABC):
@@ -65,7 +65,7 @@ class ModifyUserHandler(BaseHandler, ABC):
     @tornado.web.authenticated
     def post(self):
         json_data = json.load(self.request.body)
-        json_data['ID'] = self.get_secure_cookie('ID')
+        json_data['ID'] = self.get_cookie('ID')
         ret = userHelper.modify(json_data)
         if ret:
             self.ret['succ'] = True
@@ -80,7 +80,7 @@ class ModifyPwdHandler(BaseHandler, ABC):
     @decorator.post_exception
     def post(self):
         json_data = json.load(self.request.body)
-        json_data['ID'] = self.get_secure_cookie('ID')
+        json_data['ID'] = self.get_cookie('ID')
         ret = userHelper.modify_pwd(json_data)
         if ret:
             self.ret['succ'] = True
@@ -96,7 +96,7 @@ class GetUserInfoHandler(BaseHandler, ABC):
     def get(self):
         json_data = json.load(self.get_argument('param'))
         ret = userHelper.query_user_info(json_data)
-        ret['ID'] = self.get_secure_cookie('ID')
+        ret['ID'] = self.get_cookie('ID')
         if ret:
             self.ret['succ'] = True
             self.ret['data'] = ret
@@ -106,7 +106,27 @@ class GetUserInfoHandler(BaseHandler, ABC):
 
 
 class UserExitHandler(BaseHandler, ABC):
-    def post(self):
+    @tornado.web.authenticated
+    @decorator.get_exception
+    def get(self):
         self.clear_cookie("ID")
         self.clear_cookie("USERNAME")
+        self.ret['succ'] = True
+        self.ret['data']['resultDesc'] = 'exit success'
         self.redirect("/")
+
+
+class CurrentUserHandler(BaseHandler, ABC):
+    # @tornado.web.authenticated
+    @decorator.get_exception
+    def get(self):
+        ret = {'USERNAME': self.get_cookie('USERNAME')}
+        if ret['USERNAME'] is not None:
+            self.ret['succ'] = True
+            self.ret['data']['resultDesc'] = 'user already login'
+            self.ret['data']['USERNAME'] = ret['USERNAME']
+        else:
+            self.ret['succ'] = False
+            self.ret['data']['resultDesc'] = 'user not login'
+
+
