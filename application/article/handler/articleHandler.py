@@ -16,12 +16,13 @@ from application.user.handler.userHandler import BaseHandler
 
 class AddArticleHandler(BaseHandler, ABC):
     @decorator.post_exception
-    @tornado.web.authenticated
+    # @tornado.web.authenticated
     def post(self):
         json_data = json.loads(self.request.body)
-        json_data['ID'] = self.current_user
+        json_data['ID'] = str(self.get_secure_cookie("ID"), encoding='utf-8')
         ret = articleHelper.add(json_data)
         if ret:
+            self.ret['data']['result'] = ret
             self.ret['succ'] = True
             self.ret['data']['resultDesc'] = 'Add Article Successful'
         else:
@@ -48,9 +49,10 @@ class ModifyArticleHandler(BaseHandler, ABC):
     @tornado.web.authenticated
     def post(self):
         json_data = json.loads(self.request.body)
-        json_data['ID'] = self.current_user
+        json_data['ID'] = str(self.get_secure_cookie('ID'), encoding='utf-8')
         ret = articleHelper.modify(json_data)
         if ret:
+            self.ret['data']['result'] = ret
             self.ret['succ'] = True
             self.ret['data']['resultDesc'] = 'Update Article Successful'
         else:

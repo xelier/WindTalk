@@ -25,7 +25,7 @@ def register(param):
     if not ret:
         user_model['ID'] = sqlhelper.generate_id_by_sequence_name("USER_ID_SEQ")
         userDao.add_user(user_model)
-        return True
+        return user_model
     return False
 
 
@@ -56,3 +56,14 @@ def query_user_info(param):
     """query user info"""
     user_id = param['ID']
     return query_user_info(user_id)
+
+
+def query_user_list(param):
+    article_param = {'CONDITION': param['CONDITION'], 'PAGE_INDEX': param['PAGE_INDEX'],
+                     'PAGE_SIZE': param['PAGE_SIZE'],
+                     'FIELDS': ['ID', 'USERNAME', 'NICKNAME', 'ROLE', 'EMAIL']}
+    article_list = userDao.query_user_list(article_param)
+    article_page_info = userDao.query_user_list_count(article_param)
+    ret = {'RESULT_LIST': article_list, 'RECORD_NUM': article_page_info['RECORD_NUM'],
+           'PAGE_COUNT': article_page_info['PAGE_COUNT']}
+    return ret

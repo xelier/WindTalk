@@ -242,7 +242,10 @@ def get_all_record_num(table, paramDict):
     if paramDict is not None and len(paramDict) > 0:
         sql += "where "
         for key, val in paramDict.items():
-            sql += "%s = '%s' and " % (key, pymysql.escape_string(val))
+            if isinstance(val, int):
+                sql += "%s = '%d' and " % (key, val)
+            else:
+                sql += "%s = '%s' and " % (key, pymysql.escape_string(val))
         sql = sql[:-5]
     result = execute(sql, dictCursor=True)
     ret = int(result[0]['pagenum'])
@@ -269,7 +272,10 @@ def get_page_list(table, param_dict, page_index, pagesize, field_list=None):
     if param_dict is not None and len(param_dict) > 0:
         sql += "where "
         for key, val in param_dict.items():
-            sql += "%s = '%s' and " % (key, pymysql.escape_string(val))
+            if isinstance(val, int):
+                sql += "%s = '%d' and " % (key, val)
+            else:
+                sql += "%s = '%s' and " % (key, pymysql.escape_string(val))
         sql = sql[:-5]
     sql += " limit %d, %d" % (page_index*pagesize, pagesize)
     result = execute(sql, dictCursor=True)
@@ -288,7 +294,10 @@ def get_page_num(table, param_dict, page_size):
     if param_dict is not None and len(param_dict) > 0:
         sql += "where "
         for key, val in param_dict.items():
-            sql += "%s = '%s' and " % (key, pymysql.escape_string(val))
+            if isinstance(val, int):
+                sql += "%s = '%d' and " % (key, val)
+            else:
+                sql += "%s = '%s' and " % (key, pymysql.escape_string(val))
         sql = sql[:-5]
     result = execute(sql, dictCursor=True)
     ret = int(result[0]['pagenum'])

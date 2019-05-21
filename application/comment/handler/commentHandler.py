@@ -42,3 +42,16 @@ class QueryCommentListHandler(BaseHandler, ABC):
         else:
             self.ret['succ'] = False
             self.ret['err'] = 'No Comment Found'
+
+
+class QueryCommentPageHandler(BaseHandler, ABC):
+    @decorator.get_exception
+    def get(self):
+        json_data = json.loads(self.get_argument("param"))
+        ret = commentHelper.query_comment_page(json_data)
+        if ret:
+            self.ret['succ'] = True
+            self.ret['data'] = ret
+        else:
+            self.ret['succ'] = False
+            self.ret['err'] = 'No Comment Found'

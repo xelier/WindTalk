@@ -28,6 +28,8 @@ class DatetimeEncoder(json.JSONEncoder):
             return o.strftime('%Y-%M-%D %H:%M:%S')
         elif isinstance(o, date):
             return o.strftime('%Y-%M-%D')
+        elif isinstance(o, bytes):
+            return str(o, encoding='utf-8')
         return json.JSONEncoder.default(self, o)
 
 

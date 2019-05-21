@@ -14,7 +14,8 @@ def add(param):
     if not ret:
         article_param['ARTICLE_ID'] = sqlhelper.generate_id_by_sequence_name('ARTICLE_ID_SEQ')
         articleDao.add_article(article_param)
-        return article_param['ARTICLE_ID']
+        del article_param['CREATE_TIME'], article_param['CREATE_USER']
+        return article_param
     return False
 
 
@@ -35,17 +36,20 @@ def modify(param):
                      'DESCRIPTION': param['CONTENT'][:200] + '...' if len(param['CONTENT']) > 200 else param['CONTENT'] + '...',
                      'ARTICLE_ID': param['ARTICLE_ID']
                      }
-    ret = sqlhelper.get_record_by_param('ARTICLE', article_param['ARTICLE_ID'])
+    ret = sqlhelper.get_record_by_param('ARTICLE', {'ARTICLE_ID': article_param['ARTICLE_ID']})
     if ret:
         articleDao.edit_article(article_param)
-        return True
+        del article_param['CREATE_USER'], article_param['CREATE_TIME']
+        return article_param
     return False
 
 
 def query_list(param):
     """add necessary param to the article's list"""
     article_param = {'CONDITION': param['CONDITION'], 'PAGE_INDEX': param['PAGE_INDEX'], 'PAGE_SIZE': param['PAGE_SIZE'],
-                     'FIELDS': ['ARTICLE_ID', 'TITLE', 'DESCRIPTION', 'CREATE_USER', 'CREATE_TIME']}
+                     'FIELDS': ['ARTICLE_ID', 'CONTENT', 'TITLE', 'DESCRIPTION']}
+    # article_param = {'CONDITION': param['CONDITION'], 'PAGE_INDEX': param['PAGE_INDEX'], 'PAGE_SIZE': param['PAGE_SIZE'],
+    #                  'FIELDS': ['ARTICLE_ID', 'CONTENT', 'TITLE', 'DESCRIPTION', 'CREATE_USER', 'CREATE_TIME']}
     article_list = articleDao.query_article_list(article_param)
     article_page_info = articleDao.query_article_list_count(article_param)
     ret = {'RESULT_LIST': article_list, 'RECORD_NUM': article_page_info['RECORD_NUM'], 'PAGE_COUNT': article_page_info['PAGE_COUNT']}

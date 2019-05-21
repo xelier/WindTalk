@@ -11,6 +11,7 @@ url_handlers = [
     (r"/rmt/getUserInfo", userHandler.GetUserInfoHandler),
     (r"/rmt/logout", userHandler.UserExitHandler),
     (r"/rmt/currentUser", userHandler.CurrentUserHandler),
+    (r"/rmt/getUserList", userHandler.QueryUserPageHandler),
 
     (r"/rmt/addArticle", articleHandler.AddArticleHandler),
     (r"/rmt/deleteArticle", articleHandler.DeleteArticleHandler),
@@ -20,5 +21,6 @@ url_handlers = [
 
     (r"/rmt/addComment", commentHandler.AddCommentHandler),
     (r"/rmt/deleteComment", commentHandler.DeleteCommentHandler),
-    (r"/rmt/queryCommentList", commentHandler.QueryCommentListHandler)
+    (r"/rmt/queryCommentList", commentHandler.QueryCommentListHandler),
+    (r"/rmt/queryCommentPage", commentHandler.QueryCommentPageHandler)
 ]

@@ -15,17 +15,18 @@ from application.user.helper import userHelper
 
 class BaseHandler(tornado.web.RequestHandler, ABC):
     def get_current_user(self):
-        return self.get_cookie("ID")
+        return self.get_secure_cookie("ID")
 
     def set_default_headers(self):
-        self.set_header("Access-Control-Allow-Origin", "*")  # 这个地方可以写域名
+        self.set_header("Access-Control-Allow-Origin", "http://localhost:8080")  # 这个地方可以写域名
         self.set_header("Access-Control-Allow-Headers", "x-requested-with")
+        self.set_header("Access-Control-Allow-Credentials", "true")
         self.set_header('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS')
 
 
 class WelcomeHandler(BaseHandler, ABC):
     def get(self):
-        self.render('index.html', user=self.current_user)
+        self.render('index.html', user=self.get_secure_cookie('USER_NAME'))
 
 
 class RegisterHandler(BaseHandler, ABC):
@@ -33,9 +34,10 @@ class RegisterHandler(BaseHandler, ABC):
     def post(self):
         json_data = json.loads(self.request.body)
         ret = userHelper.register(json_data)
-        if ret:
+        if ret is not None:
             self.ret['succ'] = True
             self.ret['data']['resultDesc'] = 'Register Successful'
+            self.ret['data']['result'] = ret
         else:
             self.ret['succ'] = False
             self.ret['err'] = 'User Has been Exists'
@@ -56,16 +58,17 @@ class LoginHandler(BaseHandler, ABC):
         else:
             self.ret['succ'] = True
             self.ret['data']['USERNAME'] = result['USERNAME']
-            self.set_cookie("USERNAME", result['USERNAME'])
-            self.set_cookie("ID", str(result['ID']))
+            self.set_secure_cookie("USERNAME", result['USERNAME'])
+            self.set_secure_cookie("ID", str(result['ID']))
 
 
 class ModifyUserHandler(BaseHandler, ABC):
     @decorator.post_exception
     @tornado.web.authenticated
     def post(self):
-        json_data = json.load(self.request.body)
-        json_data['ID'] = self.get_cookie('ID')
+        json_data = json.loads(self.request.body)
+        if json_data['ID'] is None:
+            json_data['ID'] = str(self.get_secure_cookie("ID"), encoding='utf-8')
         ret = userHelper.modify(json_data)
         if ret:
             self.ret['succ'] = True
@@ -80,7 +83,7 @@ class ModifyPwdHandler(BaseHandler, ABC):
     @decorator.post_exception
     def post(self):
         json_data = json.load(self.request.body)
-        json_data['ID'] = self.get_cookie('ID')
+        json_data['ID'] = str(self.get_secure_cookie('ID'), encoding='utf-8')
         ret = userHelper.modify_pwd(json_data)
         if ret:
             self.ret['succ'] = True
@@ -95,8 +98,8 @@ class GetUserInfoHandler(BaseHandler, ABC):
     @tornado.web.authenticated
     def get(self):
         json_data = json.load(self.get_argument('param'))
+        json_data['ID'] = str(self.get_secure_cookie("ID"), encoding='utf-8')
         ret = userHelper.query_user_info(json_data)
-        ret['ID'] = self.get_cookie('ID')
         if ret:
             self.ret['succ'] = True
             self.ret['data'] = ret
@@ -120,7 +123,7 @@ class CurrentUserHandler(BaseHandler, ABC):
     # @tornado.web.authenticated
     @decorator.get_exception
     def get(self):
-        ret = {'USERNAME': self.get_cookie('USERNAME')}
+        ret = {'USERNAME': self.get_secure_cookie('USERNAME')}
         if ret['USERNAME'] is not None:
             self.ret['succ'] = True
             self.ret['data']['resultDesc'] = 'user already login'
@@ -130,3 +133,14 @@ class CurrentUserHandler(BaseHandler, ABC):
             self.ret['data']['resultDesc'] = 'user not login'
 
 
+class QueryUserPageHandler(BaseHandler, ABC):
+    @decorator.get_exception
+    def get(self):
+        json_data = json.loads(self.get_argument("param"))
+        ret = userHelper.query_user_list(json_data)
+        if ret:
+            self.ret['succ'] = True
+            self.ret['data'] = ret
+        else:
+            self.ret['succ'] = False
+            self.ret['err'] = 'No Comment Found'

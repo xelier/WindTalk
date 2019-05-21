@@ -8,8 +8,8 @@ if DEBUG:
     db_user = 'forfun'
     db_pwd = 'xelier'
     db_port = 3306
-    db_host = '119.29.35.83'
-    # db_host = 'localhost'
+    # db_host = '119.29.35.83'
+    db_host = 'localhost'
 else:
     db_name = 'forfundb'
     db_user = 'forfun'
