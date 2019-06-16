@@ -67,3 +67,13 @@ def query_user_list(param):
     ret = {'RESULT_LIST': article_list, 'RECORD_NUM': article_page_info['RECORD_NUM'],
            'PAGE_COUNT': article_page_info['PAGE_COUNT']}
     return ret
+
+
+def detele_user(param):
+    """
+        Delete An Article.
+        """
+    if param['USER_ID']:
+        userDao.delete_user(param['USER_ID'])
+        return True
+    return False

@@ -144,3 +144,17 @@ class QueryUserPageHandler(BaseHandler, ABC):
         else:
             self.ret['succ'] = False
             self.ret['err'] = 'No Comment Found'
+
+
+class DeleteUserHandler(BaseHandler, ABC):
+    @tornado.web.authenticated
+    @decorator.post_exception
+    def post(self):
+        json_data = json.loads(self.request.body)
+        ret = userHelper.detele_user(json_data)
+        if ret:
+            self.ret['succ'] = True
+            self.ret['data']['resultDesc'] = 'Delete User Successful'
+        else:
+            self.ret['succ'] = False
+            self.ret['err'] = 'Delete User Failed'

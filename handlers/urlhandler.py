@@ -12,6 +12,7 @@ url_handlers = [
     (r"/rmt/logout", userHandler.UserExitHandler),
     (r"/rmt/currentUser", userHandler.CurrentUserHandler),
     (r"/rmt/getUserList", userHandler.QueryUserPageHandler),
+    (r"/rmt/deleteUser", userHandler.DeleteUserHandler),
 
     (r"/rmt/addArticle", articleHandler.AddArticleHandler),
     (r"/rmt/deleteArticle", articleHandler.DeleteArticleHandler),
